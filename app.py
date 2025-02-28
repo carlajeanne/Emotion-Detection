@@ -1,92 +1,89 @@
 # Developed By Code|<Ill at 6/25/2019
 # Developed VM IP 203.241.246.158
 
-#Scikit LEarn and Pandas Imports
+# Scikit Learn and Pandas Imports
 import pandas as pd
 import pickle
 from sklearn.metrics import classification_report, average_precision_score, mean_squared_error
 from sklearn.metrics import confusion_matrix
 
-#Dash Dependencies
+# Dash Dependencies
 import dash
-import dash_core_components as dcc
-import dash_html_components as html
+from dash import dcc
+from dash import html
+from dash import dash_table
 from dash.dependencies import Input, Output, State
 import base64
-import dash_table
 
-#Plotly Imports
+# Plotly Imports
 import plotly
-import plotly.plotly as py
+import chart_studio.plotly as py
 import plotly.graph_objs as go
 import plotly.figure_factory as ff
-plotly.tools.set_credentials_file(username='c.sabyasachi99', api_key='y5FSl1jIheriCgKbK3Ff')
+import chart_studio
+chart_studio.tools.set_credentials_file(username='c.sabyasachi99', api_key='y5FSl1jIheriCgKbK3Ff')
 
-#Self Declared Modules and Packages
+# Self Declared Modules and Packages
 from Utilities import helper_functions
 from Utilities import filtering
 from Utilities import feature_engineering
 from Model import Model
 
-
-
 # External CSS
-external_stylesheets=["assets/template.css","assets/bootstrap.min.css"]
+external_stylesheets = ["assets/template.css", "assets/bootstrap.min.css"]
 # External Scripts
-external_scripts=["assets/bootstrap.min.js"]
+external_scripts = ["assets/bootstrap.min.js"]
 
 # Initializing the Default Constructor of Dash Framework and the Application
-app=dash.Dash(__name__,
-              external_scripts=external_scripts,
-              external_stylesheets=external_stylesheets)
+app = dash.Dash(__name__,
+                external_scripts=external_scripts,
+                external_stylesheets=external_stylesheets)
 
-app.layout=html.Div([
-    #Banner
+app.layout = html.Div([
+    # Banner
     html.Div(className='header', children=[
         html.Div(className='header-content', children=[
             html.H2("Pet Emotion Detection", id='title'),
-            html.Img(src="https://i.ibb.co/0yTjMz4/Inje.png",id='inje_logo'),
-            html.Img(src="https://i.ibb.co/0yTjMz4/Inje.png",id='ida_logo')
+            html.Img(src="https://i.ibb.co/0yTjMz4/Inje.png", id='inje_logo'),
+            html.Img(src="https://i.ibb.co/0yTjMz4/Inje.png", id='ida_logo')
         ])
     ]),
 
-    #Body
-    html.Div(className='body',children=[
-        html.Div(className='section-1',children=[
+    # Body
+    html.Div(className='body', children=[
+        html.Div(className='section-1', children=[
             html.Div(className='container', children=[
                 html.Div(className='row', children=[
                     html.Div(className='col-lg-3 white-bg', children=[
-                        html.H2("Select Emotion Data", id='sub-title',className='selector'),
+                        html.H2("Select Emotion Data", id='sub-title', className='selector'),
                         dcc.Dropdown(
                             id='Dataset',
                             options=[
-                                {'label':'Postive Emotion','value':'Test_Right'},
-                                {'label':'Neutral Emotion','value':'Test_Neutral'},
-                                {'label':'Negative Emotion','value':'Test_Left'}
+                                {'label': 'Postive Emotion', 'value': 'Test_Right'},
+                                {'label': 'Neutral Emotion', 'value': 'Test_Neutral'},
+                                {'label': 'Negative Emotion', 'value': 'Test_Left'}
                             ],
                             multi=True,
                             value=['Test_Right']
                         ),
-                        html.Div(className='button-holder',children=[
-                            html.Button('Merge Data', id='click_button',className='button')
+                        html.Div(className='button-holder', children=[
+                            html.Button('Merge Data', id='click_button', className='button')
                         ]),
                         html.H4("Model Initialization", className='selector'),
-                        html.Div(className='button-holder',children=[
-                            html.Button('Run Model', id='click_button_1',className='button')
+                        html.Div(className='button-holder', children=[
+                            html.Button('Run Model', id='click_button_1', className='button')
                         ])
-
-
                     ]),
 
-                    html.Div(className='col-lg-3 white-bg',children=[
-                        html.H4("BioSignal View Selection",className='selector'),
+                    html.Div(className='col-lg-3 white-bg', children=[
+                        html.H4("BioSignal View Selection", className='selector'),
                         dcc.RadioItems(
                             id='view_choice',
                             options=[
-                                {'label':'Neck Accelerometer', 'value':'N-Acc'},
-                                {'label':'Neck Gyroscope', 'value':'N-Gyro'},
-                                {'label':'Tail Accelerometer', 'value':'T-Acc'},
-                                {'label':'Tail Gyroscope', 'value':'T-Gyro'}
+                                {'label': 'Neck Accelerometer', 'value': 'N-Acc'},
+                                {'label': 'Neck Gyroscope', 'value': 'N-Gyro'},
+                                {'label': 'Tail Accelerometer', 'value': 'T-Acc'},
+                                {'label': 'Tail Gyroscope', 'value': 'T-Gyro'}
                             ],
                             value='N-Acc',
                             className='radio_buttons'
@@ -94,13 +91,12 @@ app.layout=html.Div([
                         html.Div(className='note-tag', children=[
                             dcc.Markdown(children='''
                             >**Note :** The Radio Items provides multiple view of the signals.''')
-                        ],style={'margin-top':'12px'})
-
+                        ], style={'margin-top': '12px'})
                     ]),
 
                     html.Div(className='col-lg-6 white-bg graph', children=[
                         html.H4("Visual Representation of Data", className='selector'),
-                        dcc.Graph(id='axis_area',style={'width':'98%','float':'right', 'height':'300px','text-align':'center','position':'relative'})
+                        dcc.Graph(id='axis_area', style={'width': '98%', 'float': 'right', 'height': '300px', 'text-align': 'center', 'position': 'relative'})
                     ])
                 ])
             ])
@@ -721,4 +717,4 @@ def Evaluation(n_clicks, data):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True,port=8090)
+    app.run_server(debug=True, port=8090)

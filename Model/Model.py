@@ -1,34 +1,32 @@
 # Developed By Code|<Ill at 7/8/2019
 # Developed VM IP 203.241.246.158
 
-#Imports Model Load
+# Imports Model Load
 import pickle
 from scipy.stats import mode
+import sys
+import os
+
+# Add the parent directory to the sys.path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from Utilities import helper_functions
 
-
-
 def Model_Activity():
-    model_path='Model/Emotion_Model.pkl'
-    model_file=open(model_path,'rb')
-    model=pickle.load(model_file)
-
+    model_path = 'Model/Emotion_Model.pkl'
+    model_file = open(model_path, 'rb')
+    model = pickle.load(model_file)
     return model
 
 def model_call(data):
-    feature_set=['N-AccX', 'N-AccY', 'N-AccZ', 'N-GyroX', 'N-GyroY', 'N-GyroZ', 'T-AccX', 'T-AccY', 'T-AccZ', 'T-GyroX', 'T-GyroY', 'T-GyroZ']
-    Label=data['Label'].mode()[0]
-    features=data[feature_set]
-    model=Model_Activity()
-    predictions=model.predict(features)
+    feature_set = ['N-AccX', 'N-AccY', 'N-AccZ', 'N-GyroX', 'N-GyroY', 'N-GyroZ', 'T-AccX', 'T-AccY', 'T-AccZ', 'T-GyroX', 'T-GyroY', 'T-GyroZ']
+    Label = data['Label'].mode()[0]
+    features = data[feature_set]
+    model = Model_Activity()
+    predictions = model.predict(features)
 
-    data['Predictions']=predictions
-    data['Information']=Label+'-Emotion'
-    data['Predictions']=helper_functions.Num_to_Label(data['Predictions'])
+    data['Predictions'] = predictions
+    data['Information'] = Label + '-Emotion'
+    data['Predictions'] = helper_functions.Num_to_Label(data['Predictions'])
 
     return data
-
-
-
-
-
